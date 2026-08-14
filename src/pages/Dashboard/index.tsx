@@ -5,23 +5,23 @@ import SelectInput from "../../components/SelectInput";
 import { Container } from "./styles";
 
 const Dashboard: React.FC = () => {
-  const meses = [
-    { value: "Janeiro", label: "Janeiro" },
-    { value: "Fevereiro", label: "Fevereiro" },
-    { value: "Março", label: "Março" },
+  const month = [
+    { value: 7, label: "Julho" },
+    { value: 8, label: "Agosto" },
+    { value: 9, label: "Setembro" },
   ];
 
-  const anos = [
-    { value: "2024", label: "2024" },
-    { value: "2025", label: "2025" },
-    { value: "2026", label: "2026" },
+  const years = [
+    { value: 2026, label: "2026" },
+    { value: 2025, label: "2025" },
+    { value: 2024, label: "2024" },
   ];
 
   return (
     <Container>
       <ContentHeader title="Dashboard" lineColor="#f7931b">
-        <SelectInput options={meses} />
-        <SelectInput options={anos} />
+        <SelectInput options={month} />
+        <SelectInput options={years} />
       </ContentHeader>
     </Container>
   );
