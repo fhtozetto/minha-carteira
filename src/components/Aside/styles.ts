@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 export const Container = styled.div`
     /* Define a siglado usada no grid do layout */
@@ -33,7 +34,7 @@ export const Container = styled.div`
     margin-top: 50px;
   `;
 
-  export const MenuItemLink = styled.a`
+  export const MenuItemLink = styled(Link)`
     color: ${props => props.theme.colors.info};
     text-decoration: none;
 
