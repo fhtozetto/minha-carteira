@@ -1,11 +1,23 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import ContentHeader from "../../components/ContentHeader";
 import SelectInput from "../../components/SelectInput";
 import HistoryFinanceCard from "../../components/HistoryFinanceCard";
 
+import gains from "../../repositories/gains";
+import expenses from "../../repositories/expenses";
+
 import { Container, Content, Filters } from "./styles";
+
+interface IData {
+  id: string;
+  description: string;
+  amountFormatted: string;
+  frequency: string;
+  dateFormatted: string;
+  tagColor: string;
+}
 
 const List: React.FC = () => {
   const { type = "" } = useParams<{ type: string }>();
@@ -14,10 +26,12 @@ const List: React.FC = () => {
       ? {
           title: "Entradas",
           lineColor: "#f7931b",
+          data: gains,
         }
       : {
           title: "Saídas",
           lineColor: "#e44c4e",
+          data: expenses,
         };
   }, [type]);
 
@@ -32,6 +46,23 @@ const List: React.FC = () => {
     { value: 2025, label: "2025" },
     { value: 2024, label: "2024" },
   ];
+
+  const [data, setData] = useState<IData[]>([]);
+
+  useEffect(() => {
+    const response = params.data.map((item, index) => {
+      return {
+        id: String(index),
+        description: item.description,
+        amountFormatted: item.amount,
+        frequency: item.frequency,
+        dateFormatted: item.date,
+        tagColor: item.frequency === "recorrente" ? "#4e41f0" : "#e44c4e",
+      };
+    });
+
+    setData(response);
+  }, [params.data]);
 
   return (
     <Container>
@@ -50,12 +81,17 @@ const List: React.FC = () => {
       </Filters>
 
       <Content>
-        <HistoryFinanceCard
-          tagColor="#e44c4e"
-          title="Conta de Luz"
-          subtitle="14/08/2026"
-          amount="R$ 130,00"
-        />
+        {data.map((item) => {
+          return (
+            <HistoryFinanceCard
+              key={item.id}
+              tagColor={item.tagColor}
+              title={item.description}
+              subtitle={item.dateFormatted}
+              amount={item.amountFormatted}
+            />
+          );
+        })}
       </Content>
     </Container>
   );
