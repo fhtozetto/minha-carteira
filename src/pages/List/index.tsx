@@ -9,8 +9,10 @@ import gains from "../../repositories/gains";
 import expenses from "../../repositories/expenses";
 import formatCurrency from "../../utils/formatCurrency";
 import formatDate from "../../utils/formatDate";
+import listOfMonths from "../../utils/months";
 
 import { Container, Content, Filters } from "./styles";
+//import { PiUniteSquare } from "react-icons/pi";
 
 interface IData {
   id: string;
@@ -33,7 +35,7 @@ const List: React.FC = () => {
     return type === "entry-balance"
       ? {
           title: "Entradas",
-          lineColor: "#f7931b",
+          lineColor: "#4ad306",
           data: gains,
         }
       : {
@@ -43,26 +45,36 @@ const List: React.FC = () => {
         };
   }, [type]);
 
-  const month = [
-    { value: 1, label: "Janeiro" },
-    { value: 2, label: "Fevereiro" },
-    { value: 3, label: "Março" },
-    { value: 4, label: "Abril" },
-    { value: 5, label: "Maio" },
-    { value: 6, label: "Junho" },
-    { value: 7, label: "Julho" },
-    { value: 8, label: "Agosto" },
-    { value: 9, label: "Setembro" },
-    { value: 10, label: "Outubro" },
-    { value: 11, label: "Novembro" },
-    { value: 12, label: "Dezembro" },
-  ];
+  const months = useMemo(() => {
+    return listOfMonths.map((month, index) => {
+      return {
+        key: String(index),
+        value: index + 1,
+        label: month,
+      };
+    });
+  }, []);
 
-  const years = [
-    { value: 2026, label: "2026" },
-    { value: 2025, label: "2025" },
-    { value: 2024, label: "2024" },
-  ];
+  const years = useMemo(() => {
+    const uniqueYears: number[] = [];
+
+    params.data.forEach((item) => {
+      const date = new Date(item.date);
+      const year = date.getFullYear();
+
+      if (!uniqueYears.includes(year)) {
+        uniqueYears.push(year);
+      }
+    });
+
+    return uniqueYears.map((year, index) => {
+      return {
+        key: String(index),
+        value: year,
+        label: year,
+      };
+    });
+  }, [params.data]);
 
   const [data, setData] = useState<IData[]>([]);
 
@@ -93,7 +105,7 @@ const List: React.FC = () => {
     <Container>
       <ContentHeader title={params.title} lineColor={params.lineColor}>
         <SelectInput
-          options={month}
+          options={months}
           onChange={(e) => setMonthSelected(e.target.value)}
           defaultValue={monthSelected}
         />
