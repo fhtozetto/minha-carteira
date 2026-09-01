@@ -10,7 +10,7 @@ const AppRoutes: React.FC = () => (
     <Routes>
       <Route path="/" element={<Dashboard />} />
       <Route path="/Dashboard" element={<Dashboard />} />
-      <Route path="/List/:type" element={<List />} />
+      <Route path="/list/:movementType" element={<List />} />
     </Routes>
   </Layout>
 );
