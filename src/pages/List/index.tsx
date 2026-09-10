@@ -45,7 +45,6 @@ const List: React.FC = () => {
   ]);
 
   const { movementType = "" } = useParams<{ movementType: string }>();
-  // const movementType = match.params.type;
 
   const pageData = useMemo(() => {
     return movementType === "entry-balance"
