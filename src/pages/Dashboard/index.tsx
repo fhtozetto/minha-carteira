@@ -11,6 +11,7 @@ import listOfMonths from "../../utils/months";
 
 import happyImg from "../../assets/happy.svg";
 import sadImg from "../../assets/sad.svg";
+import grinningImg from "../../assets/grinning.svg";
 
 import { Container, Content } from "./styles";
 
@@ -22,16 +23,6 @@ const Dashboard: React.FC = () => {
   const [yearSelected, setYearSelected] = useState<number>(
     new Date().getFullYear(),
   );
-
-  const months = useMemo(() => {
-    return listOfMonths.map((month, index) => {
-      return {
-        key: String(index),
-        value: index + 1,
-        label: month,
-      };
-    });
-  }, []);
 
   const years = useMemo(() => {
     const uniqueYears: number[] = [];
@@ -53,6 +44,85 @@ const Dashboard: React.FC = () => {
       };
     });
   }, []);
+
+  const months = useMemo(() => {
+    return listOfMonths.map((month, index) => {
+      return {
+        key: String(index),
+        value: index + 1,
+        label: month,
+      };
+    });
+  }, []);
+
+  const totalExpenses = useMemo(() => {
+    let total: number = 0;
+
+    expenses.forEach((item) => {
+      const date = new Date(item.date);
+      const year = date.getFullYear();
+      const month = date.getMonth() + 1;
+
+      if (month === monthSelected && year === yearSelected) {
+        try {
+          total += Number(item.amount);
+        } catch {
+          throw new Error("Invalid amount. Amount must be a number.");
+        }
+      }
+    });
+
+    return total;
+  }, [monthSelected, yearSelected]);
+
+  const totalGains = useMemo(() => {
+    let total: number = 0;
+
+    gains.forEach((item) => {
+      const date = new Date(item.date);
+      const year = date.getFullYear();
+      const month = date.getMonth() + 1;
+
+      if (month === monthSelected && year === yearSelected) {
+        try {
+          total += Number(item.amount);
+        } catch {
+          throw new Error("Invalid amount. Amount must be a number.");
+        }
+      }
+    });
+
+    return total;
+  }, [monthSelected, yearSelected]);
+
+  const totalBalance = useMemo(() => {
+    return totalGains - totalExpenses;
+  }, [totalGains, totalExpenses]);
+
+  const message = useMemo(() => {
+    if (totalBalance > 0) {
+      return {
+        title: "Muito Bem!",
+        description: "Sua carteira está positiva!",
+        footerText: "Continue assim. Considere investir o seu saldo.",
+        icon: happyImg,
+      };
+    } else if (totalBalance < 0) {
+      return {
+        title: "Que Pena!",
+        description: "Sua carteira está negativa!",
+        footerText: "Tente reduzir seus gastos.",
+        icon: sadImg,
+      };
+    } else {
+      return {
+        title: "Ufa!",
+        description: "Sua carteira está equilibrada!",
+        footerText: "Mantenha o equilíbrio para evitar problemas futuros.",
+        icon: grinningImg,
+      };
+    }
+  }, [totalBalance]);
 
   const handleMonthSelected = (month: string) => {
     const parsedMonth = Number(month);
@@ -92,30 +162,30 @@ const Dashboard: React.FC = () => {
       <Content>
         <WalletBox
           title="Saldo"
-          amount={150.0}
+          amount={totalBalance}
           footerlabel="atualizado com base nas entradas e saídas"
           icon="dollar"
           color="#4E41f0"
         />
         <WalletBox
           title="Entradas"
-          amount={5000.0}
+          amount={totalGains}
           footerlabel="atualizado com base nas entradas e saídas"
           icon="arrowUp"
           color="#F7931B"
         />
         <WalletBox
           title="Saídas"
-          amount={4850.0}
+          amount={totalExpenses}
           footerlabel="atualizado com base nas entradas e saídas"
           icon="arrowDown"
           color="#E44c4E"
         />
         <MessageBox
-          title="Muito Bem!"
-          description="Suca carteira está positiva!"
-          footerText="Continue assim. Considere investir o seu saldo."
-          icon={happyImg}
+          title={message.title}
+          description={message.description}
+          footerText={message.footerText}
+          icon={message.icon}
         />
       </Content>
     </Container>
