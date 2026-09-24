@@ -133,14 +133,14 @@ const Dashboard: React.FC = () => {
     const data = [
       {
         name: "Entradas",
-        value: totalGains,
-        percent: percentGains,
+        value: totalGains ? totalGains : 0,
+        percent: percentGains ? percentGains : 0,
         color: "#F7931B",
       },
       {
         name: "Saídas",
-        value: totalExpenses,
-        percent: percentExpenses,
+        value: totalExpenses ? totalExpenses : 0,
+        percent: percentExpenses ? percentExpenses : 0,
         color: "#E44c4E",
       },
     ];
