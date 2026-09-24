@@ -11,22 +11,17 @@ import {
   SideRight,
 } from "./styles";
 
-// Tipagem dos dados do PieChartBox
-interface IPieChartBoxProps {
-  data: {
-    name: string;
-    value: number;
-    percent: number;
-    color: string;
-  }[];
-}
-
 // Tipagem dos dados do PieChartBox (alternativa)
 interface IPieChartData {
   name: string;
   value: number;
   percent: number;
   color: string;
+}
+
+// Tipagem das props do componente PieChartBox
+interface IPieChartBoxProps {
+  data: IPieChartData[];
 }
 
 // Tipagem do componente PieChartBox usando a interface alternativa
